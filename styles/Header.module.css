@@ -1,0 +1,32 @@
+.nav {
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px gray solid;
+}
+
+.header {
+    margin: 30px 15px;
+    font-size: 40px;
+    color: #111010e7;
+}
+
+.links {
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+}
+
+.link {
+    font-size: 20px;
+    margin: 30px 30px;
+}
+
+.connectButton {
+    margin-right: 15px;
+    margin-left: 30px;
+}
