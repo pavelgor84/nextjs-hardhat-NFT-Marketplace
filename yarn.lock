@@ -902,6 +902,13 @@
     eventemitter3 "^4.0.7"
     typed-emitter "^2.1.0"
 
+"@moralisweb3/common-core@^2.14.2":
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-core/-/common-core-2.14.2.tgz#f8f3c7b7d61eff4618b844d326e3d3df26f186fc"
+  integrity sha512-i6WIJhjoNsNpHpL61co1lJAEiw2Wbl4x+ghD4C9zO5RxA32npY4Y+KWvcBZ2EvxhHtMVKLOwq1/wUDvi7m4d+A==
+  dependencies:
+    axios "^1.2.1"
+
 "@moralisweb3/common-evm-utils@^2.12.0":
   version "2.12.0"
   resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.12.0.tgz#ddd4902eef96fea0c99e788feeb06dc10116cfe5"
@@ -911,6 +918,16 @@
     "@ethersproject/bytes" "^5.7.0"
     "@ethersproject/transactions" "^5.7.0"
     "@moralisweb3/common-core" "^2.12.0"
+
+"@moralisweb3/common-evm-utils@^2.14.2":
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/common-evm-utils/-/common-evm-utils-2.14.2.tgz#e76eaa3887b9936ddd446a70c880932750786986"
+  integrity sha512-m0QcR2NsphkCZNHgJJKUpkWtsnCbMgZ4jnZrvA5PbGY1W2lrNBak64KIvuKubDRDdf3lZQgYknRx9i6eMESHaQ==
+  dependencies:
+    "@ethersproject/address" "^5.7.0"
+    "@ethersproject/bytes" "^5.7.0"
+    "@ethersproject/transactions" "^5.7.0"
+    "@moralisweb3/common-core" "^2.14.2"
 
 "@moralisweb3/common-sol-utils@^2.12.0":
   version "2.12.0"
@@ -938,6 +955,13 @@
     "@moralisweb3/api-utils" "^2.12.0"
     "@moralisweb3/common-core" "^2.12.0"
     "@moralisweb3/common-evm-utils" "^2.12.0"
+
+"@moralisweb3/evm-utils@^2.14.2":
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/@moralisweb3/evm-utils/-/evm-utils-2.14.2.tgz#ee031d999910f2101422525b5049826a8687028d"
+  integrity sha512-1she78/55NUgemqz/SNPVgiVBjdz/aCdzyALPwHzuip/b55g4hipnnh+2rbZFV/AtOg66eQwSgF3/9d+JrV+BA==
+  dependencies:
+    "@moralisweb3/common-evm-utils" "^2.14.2"
 
 "@moralisweb3/sol-api@^2.12.0":
   version "2.12.0"

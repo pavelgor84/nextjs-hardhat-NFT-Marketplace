@@ -10,6 +10,7 @@ export default function Header() {
     const mounted = useIsMounted()
     const { address, isConnected } = useAccount()
     //const { connect } = useConnect({ connector: new MetaMaskConnector() })
+    console.log("Is connected: " + isConnected)
 
 
     return (
