@@ -1,7 +1,8 @@
 import { gql } from "@apollo/client";
 
 const GET_ACTIVE_ITEMS = gql`
-{
+query GetItems{
+    
     activeItems(first:5, where:{buyer_contains:"0x00000000"}){
         id
         buyer
@@ -10,6 +11,7 @@ const GET_ACTIVE_ITEMS = gql`
         tokenId
         price
     }
+    
 }
 `
 export default GET_ACTIVE_ITEMS

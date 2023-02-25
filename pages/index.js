@@ -1,8 +1,10 @@
 import { Inter } from '@next/font/google'
-import { useQuery } from '@apollo/client'
+import { useEffect, useState } from 'react'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { useAccount } from "wagmi"
 import GET_ACTIVE_ITEMS from '@/constants/subgraphQuery'
 import NFTBox from '@/components/NFTBox'
+import styles from '../styles/Index.module.css'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -10,27 +12,58 @@ const inter = Inter({ subsets: ['latin'] })
 export default function Home() {
 
   const { isConnected } = useAccount()
+  const [output, setOutput] = useState("")
 
-  const { loading, error, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
-  //console.log(listedNfts)
-  if (loading) return 'Loading...';
-  if (error) return `Error! ${error.message}`;
+  //const { loading, error, data: listedNfts } = useQuery(GET_ACTIVE_ITEMS)
+  const [getItems, { loading, data: listedNfts }] = useLazyQuery(GET_ACTIVE_ITEMS) // need to add pagination in the future
 
-  const output = listedNfts.activeItems.map((nft) => {
-    let { price, nftAddress, tokenId, seller } = nft
-    let key = `${nftAddress}${tokenId}`
-    return (
-      <div key={key}>
-        Price: {price}, NFT address: {nftAddress}, tokenId: {tokenId}, Seller: {seller}
-        <NFTBox price={price} nftAddress={nftAddress} tokenId={tokenId} seller={seller} />
-      </div>
-    )
-  })
+  useEffect(() => {
+    if (isConnected && !listedNfts) {
+      getItems()
+    }
+    if (isConnected && listedNfts) {
+      let itemOutput = listedNfts.activeItems.map((nft) => {
+        let { price, nftAddress, tokenId, seller } = nft
+        let key = `${nftAddress}${tokenId}`
+        return (
+          <div key={key}>
+            <NFTBox price={price} nftAddress={nftAddress} tokenId={tokenId} seller={seller} />
+          </div>
+        )
+      })
+      setOutput(itemOutput)
+    }
+    if (!isConnected && listedNfts) {
+      setOutput("")
+    }
+  }, [isConnected, listedNfts])
+
+  // if (loading) return 'Loading...';
+  // if (error) return `Error! ${error.message}`;
+
+  // const output = listedNfts.activeItems.map((nft) => {
+  //   let { price, nftAddress, tokenId, seller } = nft
+  //   let key = `${nftAddress}${tokenId}`
+  //   return (
+  //     <div key={key}>
+  //       <NFTBox price={price} nftAddress={nftAddress} tokenId={tokenId} seller={seller} />
+  //     </div>
+  //   )
+  // })
+
+
 
   return (
     <div>
-      Hi main page!
-      {output}
+
+      {output ? (
+        <div>
+          <h1 className={styles.title}>Recently listed</h1>
+          <div className={styles.card}>{output}</div>
+        </div>) :
+        (<div>Plase connect your wallet</div>)}
+
     </div>
   )
+
 }

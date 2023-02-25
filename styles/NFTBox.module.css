@@ -1,0 +1,17 @@
+.owner {
+    font-style: italic;
+}
+
+.price {
+    font-weight: bold;
+}
+
+.info_block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info_block_padding {
+    padding: 20px;
+}

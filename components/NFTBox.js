@@ -1,12 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAccount } from "wagmi"
 import Moralis from "moralis";
 import { EvmChain } from '@moralisweb3/common-evm-utils';
 import nft from "../constants/BasicNft.json"
+import Image from "next/image";
+import { Card } from "@web3uikit/core"
+import { ethers } from "ethers"
+import styles from "../styles/NFTBox.module.css"
+
 
 export default function NFTBox({ price, nftAddress, tokenId, seller, }) {
 
+    const { isConnected } = useAccount()
+
     const [imageURI, setImageURI] = useState("")
-    console.log(`imageURI: ${imageURI}`)
+    const [tokenName, setTokenName] = useState("")
+    const [tokenDescription, setTokenDescription] = useState("")
 
     async function getTokenURI() {
         try {
@@ -43,21 +52,37 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, }) {
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             const tokenURIResponse = await (await fetch(requestURL)).json()
+            console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
             const imageURI = tokenURIResponse.image
             const imageURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
+
             setImageURI(imageURL)
+            setTokenName(tokenURIResponse.name)
+            setTokenDescription(tokenURIResponse.description)
         }
     }
-    updateUI() // can use useEffect
+    //updateUI() // can use useEffect
 
-    return <div>NFTBox</div>
+    useEffect(() => {
+        if (isConnected) {
+            updateUI()
+        }
+    }, [isConnected])
+
+    return (<div>
+        {imageURI ? (
+            <Card title={tokenName} description={tokenDescription}>
+                <div className={styles.info_block_padding}>
+                    <div className={styles.info_block}>
+                        <div>#{tokenId}</div>
+                        <div className={styles.owner}> Owned by {seller}</div>
+                        <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
+                        <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
+                    </div>
+                </div>
+            </Card>) :
+            (
+                <div></div>
+            )}
+    </div>)
 }
-
-
-
-// async function updateUI() {
-
-//     const tokenURI = await getTokenURI()
-//     console.log(tokenURI)
-
-// }

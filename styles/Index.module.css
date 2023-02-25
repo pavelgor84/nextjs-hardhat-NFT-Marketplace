@@ -1,0 +1,9 @@
+.title {
+    font-weight: bold;
+}
+
+.card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

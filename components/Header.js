@@ -1,6 +1,4 @@
 import Link from "next/link"
-//import { MetaMaskConnector } from "wagmi/connectors/metaMask"
-import { useConnect, useAccount } from "wagmi"
 import useIsMounted from "@/pages/hooks/useIsMounted"
 import Styles from "../styles/Header.module.css"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
@@ -8,9 +6,6 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 
 export default function Header() {
     const mounted = useIsMounted()
-    const { address, isConnected } = useAccount()
-    //const { connect } = useConnect({ connector: new MetaMaskConnector() })
-    console.log("Is connected: " + isConnected)
 
 
     return (
