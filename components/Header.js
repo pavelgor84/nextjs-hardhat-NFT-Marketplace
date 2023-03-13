@@ -2,11 +2,24 @@ import Link from "next/link"
 import useIsMounted from "@/pages/hooks/useIsMounted"
 import Styles from "../styles/Header.module.css"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { useAccount } from "wagmi"
+import { useEffect } from "react"
+import { useMoralis } from "react-moralis";
 
 
 export default function Header() {
     const mounted = useIsMounted()
+    const { isConnected } = useAccount()
+    const { enableWeb3, deactivateWeb3 } = useMoralis()
 
+    useEffect(() => {
+        if (isConnected) {
+            enableWeb3()
+        }
+        else {
+            deactivateWeb3()
+        }
+    }, [isConnected])
 
     return (
         <nav className={Styles.nav}>

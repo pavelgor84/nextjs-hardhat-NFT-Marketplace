@@ -7,10 +7,12 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import "@rainbow-me/rainbowkit/styles.css"
 import "../styles/global.css"
 import { getDefaultWallets, RainbowKitProvider, midnightTheme } from '@rainbow-me/rainbowkit'
+import { MoralisProvider } from 'react-moralis'
+import { NotificationProvider } from "@web3uikit/core"
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: "https://api.studio.thegraph.com/query/42087/nft-marketplace/0.0.5"
+  uri: "https://api.studio.thegraph.com/query/42087/nft-marketplace/0.0.6"
 })
 
 const { chains, provider } = configureChains([localhost, goerli], [publicProvider()])
@@ -37,15 +39,19 @@ export default function App({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <MoralisProvider initializeOnMount={false} >
 
-      <WagmiConfig client={wagmiClient}>
-        <RainbowKitProvider chains={chains} theme={midnightTheme()}>
-          <ApolloProvider client={apolloClient}>
-            <Header />
-            <Component {...pageProps} />
-          </ApolloProvider>
-        </RainbowKitProvider>
-      </WagmiConfig>
+        <WagmiConfig client={wagmiClient}>
+          <RainbowKitProvider chains={chains} theme={midnightTheme()}>
+            <ApolloProvider client={apolloClient}>
+              <NotificationProvider>
+                <Header />
+                <Component {...pageProps} />
+              </NotificationProvider>
+            </ApolloProvider>
+          </RainbowKitProvider>
+        </WagmiConfig>
+      </MoralisProvider>
     </div>
 
   )

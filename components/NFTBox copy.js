@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { useMoralis, useWeb3Contract } from "react-moralis";
+import { useAccount } from "wagmi"
+import Moralis from "moralis";
+import { EvmChain } from '@moralisweb3/common-evm-utils';
 import nft from "../constants/BasicNft.json"
 import Image from "next/image";
 import { Card } from "@web3uikit/core"
 import { ethers } from "ethers"
 import styles from "../styles/NFTBox.module.css"
 import UpdateListingModal from "./UpdateListingModal";
-import BuyListingModal from "./BuyListingModal";
 
 
 const shortAdrres = (string, len) => {
@@ -19,42 +20,51 @@ const shortAdrres = (string, len) => {
     return (string.substring(0, backChars) + sepatator + string.substring(string.length - endChars))
 }
 
-export default function NFTBox({ price, nftAddress, tokenId, seller, account }) {
+export default function NFTBox({ price, nftAddress, tokenId, seller }) {
 
-    const { isWeb3Enabled } = useMoralis()
-    console.log(`web3 enabled: ${isWeb3Enabled}`)
-
+    const { address: account, isConnected } = useAccount()
 
     const [imageURI, setImageURI] = useState("")
-    //console.log(imageURI)
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
 
-    const [showChangeModal, setShowChangeModal] = useState(false)
-    const [showBuyModal, setShowBuyModal] = useState(false)
-
-    const hideChangeModal = () => {
-        setShowChangeModal(false)
-    }
-    const hideBuyModal = () => {
-        setShowBuyModal(false)
+    const [showModal, setShowModal] = useState(false)
+    const hideModal = () => {
+        setShowModal(false)
     }
 
-    const { runContractFunction: getTokenURI } = useWeb3Contract({
-        abi: nft.abi,
-        contractAddress: nftAddress,
-        functionName: "tokenURI",
-        params: {
-            tokenId: tokenId,
-        },
+    async function getTokenURI() {
+        try {
+            const abi = nft.abi
 
-    })
+            const functionName = 'tokenURI';
 
+            const address = nftAddress;
+
+            const chain = EvmChain.GOERLI;
+
+            if (!Moralis.Core.isStarted) {
+                await Moralis.start({ apiKey: process.env.NEXT_PUBLIC_M_API });
+            }
+
+            const response = await Moralis.EvmApi.utils.runContractFunction({
+                abi,
+                functionName,
+                address,
+                params: { tokenId: tokenId },
+                chain,
+            });
+
+            //console.log(response?.result);
+            return response?.result;
+        } catch (e) {
+            console.error(e);
+        }
+
+    }
 
     async function updateUI() {
         const tokenURI = await getTokenURI()
-        //console.log(`token URI: ${tokenURI}`)
-
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             const tokenURIResponse = await (await fetch(requestURL)).json()
@@ -70,54 +80,40 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     //updateUI() // can use useEffect
 
     useEffect(() => {
-        if (isWeb3Enabled) {
+        if (isConnected) {
             updateUI()
-            //setTimeout(updateUI, 500)
         }
-    }, [isWeb3Enabled])
-
+    }, [isConnected])
 
     const isOwnedByUser = seller.toLowerCase() === account.toLowerCase() || seller === undefined
     const formattedSeller = isOwnedByUser ? "you" : shortAdrres(seller, 15)
 
     const handleCardClick = () => {
-        isOwnedByUser ? setShowChangeModal(true) : setShowBuyModal(true)
+        isOwnedByUser ? setShowModal(true) : console.log("Let's buy!")
     }
 
     return (<div>
         {imageURI ? (
             <div>
-                <BuyListingModal
-                    isVisible={showBuyModal}
-                    nftAddress={nftAddress}
-                    tokenId={tokenId}
-                    price={price}
-                    hideModal={hideBuyModal}
-                    seller={seller}
-                />
                 <UpdateListingModal
-                    isVisible={showChangeModal}
+                    isVisible={showModal}
                     nftAddress={nftAddress}
                     tokenId={tokenId}
                     price={price}
-                    hideModal={hideChangeModal}
+                    hideModal={hideModal}
                 />
-                <Card title={tokenName} description={tokenDescription} cursorType="default">
+                <Card title={tokenName} description={tokenDescription} onClick={handleCardClick}>
                     <div className={styles.info_block_padding}>
                         <div className={styles.info_block}>
                             <div>#{tokenId}</div>
                             <div className={styles.owner}> Owned by {formattedSeller}</div>
                             <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
-                            <div className={styles.priceBlock}>
-                                <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
-                                {isOwnedByUser ? <button className={styles.changePriceButton} onClick={handleCardClick}>CHANGE PRICE</button>
-                                    : <button className={styles.buyButton} onClick={handleCardClick}>BUY NOW</button>}
-                            </div>
+                            <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
                         </div>
                     </div>
                 </Card> </div>) :
             (
-                <div>Loading...</div>
+                <div></div>
             )}
     </div>)
 }

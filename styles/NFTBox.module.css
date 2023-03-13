@@ -15,3 +15,31 @@
 .info_block_padding {
     padding: 20px;
 }
+
+.priceBlock {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.buyButton {
+    font-weight: bold;
+    background-color: goldenrod;
+    border: none;
+}
+
+.buyButton:hover {
+    cursor: pointer;
+    background-color: gold;
+}
+
+.changePriceButton {
+    font-weight: bold;
+    background-color: rgb(165, 179, 243);
+    border: none;
+}
+
+.changePriceButton:hover {
+    cursor: pointer;
+    background-color: rgb(144, 159, 226);
+}
