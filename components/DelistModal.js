@@ -23,7 +23,7 @@ export default function DelistModal({ nftAddress, tokenId, isVisible, hideModal 
         tx.wait(1)
         dispatch({
             type: "success",
-            message: "Listing successfully canceled! Please refresh the page.",
+            message: "Listing successfully canceled! Please refresh the page after few minutes.",
             title: "Cancel listing",
             position: "bottomR"
         })
