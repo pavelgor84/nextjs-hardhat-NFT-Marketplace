@@ -7,6 +7,7 @@ import { ethers } from "ethers"
 import styles from "../styles/NFTBox.module.css"
 import UpdateListingModal from "./UpdateListingModal";
 import BuyListingModal from "./BuyListingModal";
+import DelistModal from "./DelistModal";
 
 
 const shortAdrres = (string, len) => {
@@ -30,8 +31,10 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
 
+    /// Handle modals
     const [showChangeModal, setShowChangeModal] = useState(false)
     const [showBuyModal, setShowBuyModal] = useState(false)
+    const [showDelistModal, setShowDelistModal] = useState(false)
 
     const hideChangeModal = () => {
         setShowChangeModal(false)
@@ -39,6 +42,10 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     const hideBuyModal = () => {
         setShowBuyModal(false)
     }
+    const hideDelistModal = () => {
+        setShowDelistModal(false)
+    }
+    ///
 
     const { runContractFunction: getTokenURI } = useWeb3Contract({
         abi: nft.abi,
@@ -80,8 +87,11 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     const isOwnedByUser = seller.toLowerCase() === account.toLowerCase() || seller === undefined
     const formattedSeller = isOwnedByUser ? "you" : shortAdrres(seller, 15)
 
-    const handleCardClick = () => {
+    const handleChangeBuyClick = () => {
         isOwnedByUser ? setShowChangeModal(true) : setShowBuyModal(true)
+    }
+    const handleDelistClick = () => {
+        setShowDelistModal(true)
     }
 
     return (<div>
@@ -102,16 +112,25 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
                     price={price}
                     hideModal={hideChangeModal}
                 />
+                <DelistModal
+                    isVisible={showDelistModal}
+                    nftAddress={nftAddress}
+                    tokenId={tokenId}
+                    hideModal={hideDelistModal}
+                />
                 <Card title={tokenName} description={tokenDescription} cursorType="default">
                     <div className={styles.info_block_padding}>
                         <div className={styles.info_block}>
-                            <div>#{tokenId}</div>
+                            <div className={styles.priceBlock}>
+                                <div>#{tokenId}</div>
+                                {isOwnedByUser ? <div><button onClick={handleDelistClick}>DELIST</button></div> : <div></div>}
+                            </div>
                             <div className={styles.owner}> Owned by {formattedSeller}</div>
                             <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
                             <div className={styles.priceBlock}>
                                 <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
-                                {isOwnedByUser ? <button className={styles.changePriceButton} onClick={handleCardClick}>CHANGE PRICE</button>
-                                    : <button className={styles.buyButton} onClick={handleCardClick}>BUY NOW</button>}
+                                {isOwnedByUser ? <button className={styles.changePriceButton} onClick={handleChangeBuyClick}>CHANGE PRICE</button>
+                                    : <button className={styles.buyButton} onClick={handleChangeBuyClick}>BUY NOW</button>}
                             </div>
                         </div>
                     </div>

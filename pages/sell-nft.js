@@ -48,7 +48,7 @@ export default function Home() {
         await tx.wait(1)
         dispatch({
             type: "success",
-            message: "NFT is listed. Please refresh the page.",
+            message: "Please wait for the listing transaction...",
             title: "1/2: NFT Listing approved.",
             position: "bottomR"
         })
@@ -74,8 +74,8 @@ export default function Home() {
         tx.wait(1)
         dispatch({
             type: "success",
-            message: "NFT Listing...",
-            title: "2/2: NFT listed",
+            message: "Please refresh the page.",
+            title: "2/2: NFT is listed",
             position: "bottomR"
         })
         setStatusDisbled(false)

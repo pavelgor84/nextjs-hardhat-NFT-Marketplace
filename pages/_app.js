@@ -12,7 +12,7 @@ import { NotificationProvider } from "@web3uikit/core"
 
 const apolloClient = new ApolloClient({
   cache: new InMemoryCache(),
-  uri: "https://api.studio.thegraph.com/query/42087/nft-marketplace/0.0.6"
+  uri: "https://api.studio.thegraph.com/query/42087/nft-marketplace/0.0.7"
 })
 
 const { chains, provider } = configureChains([localhost, goerli], [publicProvider()])
