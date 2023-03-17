@@ -1,7 +1,6 @@
-import Head from 'next/head'
 import { Inter } from '@next/font/google'
 import { useWeb3Contract, isWeb3Enabled } from "react-moralis";
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { Form, useNotification } from '@web3uikit/core'
 import { ethers } from "ethers"
 import nft from "../constants/BasicNft.json"
@@ -10,6 +9,9 @@ import nftMarketplace from "../constants/NftMarketplace.json"
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+    const [statusDisabled, setStatusDisbled] = useState(false)
+
     const dispatch = useNotification()
 
     console.log(`web3 enabled: ${isWeb3Enabled}`)
@@ -17,6 +19,7 @@ export default function Home() {
     const { runContractFunction } = useWeb3Contract()
 
     async function approveAndSell(data) {
+        setStatusDisbled(true)
 
         const nftAddress = data.data[0].inputResult
         const tokenId = data.data[1].inputResult
@@ -34,13 +37,21 @@ export default function Home() {
         await runContractFunction({
             params: approveOptions,
             onError: (error) => console.log(error),
-            onSuccess: () => handleApproveSuccess(nftAddress, tokenId, price)
+            onSuccess: (tx) => handleApproveSuccess(nftAddress, tokenId, price, tx),
+
         })
 
     }
 
-    async function handleApproveSuccess(nftAddress, tokenId, price) {
-
+    async function handleApproveSuccess(nftAddress, tokenId, price, tx) {
+        console.log("Listing item.......")
+        await tx.wait(1)
+        dispatch({
+            type: "success",
+            message: "NFT is listed. Please refresh the page.",
+            title: "1/2: NFT Listing approved.",
+            position: "bottomR"
+        })
         const listOptions = {
             abi: nftMarketplace.abi,
             contractAddress: nftMarketplace.address,
@@ -55,22 +66,31 @@ export default function Home() {
         await runContractFunction({
             params: listOptions,
             onError: (error) => console.log(error),
-            onSuccess: () => handleListSuccess(),
+            onSuccess: handleListSuccess,
         })
     }
 
-    async function handleListSuccess() {
+    async function handleListSuccess(tx) {
+        tx.wait(1)
         dispatch({
             type: "success",
-            message: "NFT Listing",
-            title: "NFT listed",
-            position: "topR"
+            message: "NFT Listing...",
+            title: "2/2: NFT listed",
+            position: "bottomR"
         })
+        setStatusDisbled(false)
     }
 
     return (
         <div>
             <Form
+                isDisabled={statusDisabled}
+                buttonConfig={{
+                    isLoading: statusDisabled,
+                    loadingText: 'Transactions in progress...',
+                    text: 'Sell',
+                    theme: 'primary'
+                }}
                 onSubmit={approveAndSell}
                 data={[
                     {
