@@ -30,3 +30,7 @@
     margin-right: 15px;
     margin-left: 30px;
 }
+
+.headerBlock {
+    display: inline-flex;
+}

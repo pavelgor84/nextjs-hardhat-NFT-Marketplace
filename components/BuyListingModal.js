@@ -1,7 +1,6 @@
 import { Modal, useNotification } from "@web3uikit/core"
 import { useWeb3Contract } from "react-moralis";
 import marketplace from "../constants/NftMarketplace.json"
-import { ethers } from "ethers"
 
 
 export default function BuyListingModal({ nftAddress, tokenId, price, isVisible, hideModal, seller }) {
