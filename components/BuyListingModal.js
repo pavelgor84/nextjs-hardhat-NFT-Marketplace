@@ -19,8 +19,8 @@ export default function BuyListingModal({ nftAddress, tokenId, price, isVisible,
 
     })
 
-    const handleBuyListing = (tx) => {
-        tx.wait(1)
+    const handleBuyListing = async (tx) => {
+        await tx.wait(1)
         dispatch({
             type: "success",
             message: "Listing successfully bought!",

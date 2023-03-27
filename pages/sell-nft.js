@@ -71,7 +71,7 @@ export default function Home() {
     }
 
     async function handleListSuccess(tx) {
-        tx.wait(1)
+        await tx.wait(1)
         dispatch({
             type: "success",
             message: "Please refresh the page.",

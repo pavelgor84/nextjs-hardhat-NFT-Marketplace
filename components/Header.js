@@ -22,7 +22,7 @@ export default function Header() {
     // })
     const { runContractFunction } = useWeb3Contract()
 
-    const mounted = useIsMounted()
+    const mounted = useIsMounted() //hydration fix
     const { isConnected, isDisconnected, address } = useAccount()
     const { enableWeb3, deactivateWeb3, isWeb3Enabled } = useMoralis()
 
@@ -49,7 +49,13 @@ export default function Header() {
         }
     }
 
-    useEffect(() => {
+    const { runContractFunction: withdraw } = useWeb3Contract({
+        abi: marketplace.abi,
+        contractAddress: marketplace.address,
+        functionName: "withdrawProceeds"
+    })
+
+    useEffect(() => {   //
         if (isConnected) {
             enableWeb3()
         }
@@ -65,10 +71,20 @@ export default function Header() {
         }
     }, [isWeb3Enabled, address])
 
+    async function handleProceeds(address, tx) {
+        await tx.wait(1)
+        updateProceeds(address)
+    }
+
     return (
         <nav className={Styles.nav}>
             <div className={Styles.headerBlock}>
-                <h1 className={Styles.header}>NFT Marketplace </h1> <h3>Balance:{balance}</h3>
+                <h1 className={Styles.header}>NFT Marketplace </h1>
+                {address ? <h4>Revenue: <span className={Styles.revenue}>withdraw <span onClick={() => withdraw({
+                    onError: (error) => console.log(error),
+                    onSuccess: (tx) => handleProceeds(address, tx),// need handle !
+                })} className={Styles.balance}>{balance}</span> ETH</span></h4> : <div></div>}
+
             </div>
             <div className={Styles.links}>
                 <Link className={Styles.link} href="/">
@@ -76,6 +92,9 @@ export default function Header() {
                 </Link>
                 <Link className={Styles.link} href="/sell-nft">
                     Sell NFT
+                </Link>
+                <Link className={Styles.link} href="/inventory">
+                    Inventory
                 </Link>
                 <div className={Styles.connectButton}>
                     <ConnectButton accountStatus={"full"} chainStatus={"full"} />

@@ -34,3 +34,19 @@
 .headerBlock {
     display: inline-flex;
 }
+
+.revenue {
+    color: burlywood;
+    text-decoration: underline;
+}
+
+.revenue:hover {
+    background-color: rgb(240, 248, 255);
+
+    cursor: pointer;
+
+}
+
+.balance {
+    color: rgb(144, 159, 226);
+}

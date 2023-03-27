@@ -2,7 +2,7 @@ import { Inter } from '@next/font/google'
 import { useEffect, useState } from 'react'
 import { useQuery, useLazyQuery } from '@apollo/client'
 import { useAccount } from "wagmi"
-import GET_ACTIVE_ITEMS from '@/constants/subgraphQuery'
+import { GET_ACTIVE_ITEMS } from '@/constants/subgraphQuery'
 import NFTBox from '@/components/NFTBox'
 import styles from '../styles/Index.module.css'
 import { useMoralis } from "react-moralis";
