@@ -10,7 +10,7 @@ import styles from '../styles/Index.module.css'
 
 export default function Inventory() {
 
-    const { isWeb3Enabled } = useMoralis()
+    const { isWeb3Enabled, account } = useMoralis()
     //const { loading, error, data: listedNfts } = useQuery(GET_BUYED_ITEMS)
     const [getBuyedItems, { loading, data: buyedNfts }] = useLazyQuery(GET_BUYED_ITEMS) // need to add pagination in the future
 
@@ -18,7 +18,7 @@ export default function Inventory() {
 
     useEffect(() => {
         if (isWeb3Enabled && !buyedNfts) {
-            getBuyedItems()
+            getBuyedItems({ variables: { account } })
         }
         if (isWeb3Enabled && buyedNfts) {
             let itemOutput = buyedNfts.activeItems.map((nft) => {
