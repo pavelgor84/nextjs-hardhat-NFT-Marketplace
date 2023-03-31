@@ -1,18 +1,22 @@
-import { Modal, useNotification } from "@web3uikit/core"
+import { Modal, useNotification, Form, Button } from "@web3uikit/core"
 import { useWeb3Contract } from "react-moralis";
-import marketplace from "../constants/NftMarketplace.json"
 import nft from "../constants/BasicNft.json"
 import nftMarketplace from "../constants/NftMarketplace.json"
+import { ethers } from "ethers"
+import { useState } from "react";
 
 
 export default function SellModal({ nftAddress, tokenId, price, isVisible, hideModal }) {
+
+    const [statusDisabled, setStatusDisbled] = useState(false)
+    const { runContractFunction } = useWeb3Contract()
 
     const dispatch = useNotification()
 
     async function approveAndSell(data) {
 
         //const price = ethers.utils.parseUnits(price, "ether").toString()
-        //const price = ethers.utils.parseUnits(price, "ether").toString()
+        const newPrice = ethers.utils.parseUnits(data.data[0].inputResult, "ether").toString()
 
         const approveOptions = {
             abi: nft.abi,
@@ -26,13 +30,13 @@ export default function SellModal({ nftAddress, tokenId, price, isVisible, hideM
         await runContractFunction({
             params: approveOptions,
             onError: (error) => console.log(error),
-            onSuccess: (tx) => handleApproveSuccess(nftAddress, tokenId, price, tx),
+            onSuccess: (tx) => handleApproveSuccess(nftAddress, tokenId, newPrice, tx),
 
         })
 
     }
 
-    async function handleApproveSuccess(nftAddress, tokenId, price, tx) {
+    async function handleApproveSuccess(nftAddress, tokenId, newPrice, tx) {
         await tx.wait(1)
         dispatch({
             type: "success",
@@ -47,7 +51,7 @@ export default function SellModal({ nftAddress, tokenId, price, isVisible, hideM
             params: {
                 nftAddress: nftAddress,
                 tokenId: tokenId,
-                price: price,
+                price: newPrice,
             }
         }
 
@@ -75,27 +79,50 @@ export default function SellModal({ nftAddress, tokenId, price, isVisible, hideM
     return (
 
         <Modal
-            headerHasBottomBorder
+
+            customFooter={
+                <div style={{
+                    width: "100%"
+                }}>
+                    <Form
+                        isDisabled={statusDisabled}
+                        customFooter={<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Button onClick={() => hideModal()} size="regular" text="Cancel" theme="secondary" />
+                            <Button isLoading={statusDisabled} loadingText="Transaction in progress..." size="regular" text="List it for sale" theme="primary" type="submit" /></div>}
+
+                        data={[
+                            {
+                                inputWidth: '100%',
+                                name: 'price in ETH',
+                                type: 'number',
+                                value: ethers.utils.formatUnits(price, "ether"),
+                            },
+
+                        ]}
+                        onSubmit={approveAndSell}
+                        title="Set price for the NFT"
+                    />
+                </div>
+            }
             isVisible={isVisible}
-            onOk={() => buyListing({
-                onError: (error) => console.log(error),
-                onSuccess: handleBuyListing,
-            })}
-            onCancel={hideModal}
             onCloseButtonPressed={hideModal}
-            okText="BUY"
+            okText="SELL"
             width="40vw"
-            title="Buy item"
+            title="CONFIRM SELL PRICE"
         >
             <div
                 style={{
-                    display: 'grid',
-                    placeItems: 'center'
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    columnGap: "40px"
                 }}
             >
-                NFT contract <em> {nftAddress} </em>
-                Seller address <em>{seller}</em>
-                <p style={{ color: "black", fontWeight: 900 }}>Are you shure you want to buy this item?</p>
+                <div style={{ color: "black", fontWeight: 900 }}>NFT contract <p>Token ID</p> </div>
+                <div> {nftAddress} <p>{tokenId}</p> </div>
+
+                {/* <p style={{ color: "black", fontWeight: 900 }}>Are you shure you want to sell this item?</p> */}
+
             </div>
         </Modal>
     )

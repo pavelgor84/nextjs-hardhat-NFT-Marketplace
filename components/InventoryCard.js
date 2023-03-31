@@ -6,8 +6,8 @@ import { Card } from "@web3uikit/core"
 import { ethers } from "ethers"
 import styles from "../styles/NFTBox.module.css"
 import UpdateListingModal from "./UpdateListingModal";
-import BuyListingModal from "./BuyListingModal";
 import DelistModal from "./DelistModal";
+import SellModal from "./SellModal";
 
 
 const shortAdrres = (string, len) => {
@@ -20,7 +20,7 @@ const shortAdrres = (string, len) => {
     return (string.substring(0, backChars) + sepatator + string.substring(string.length - endChars))
 }
 
-export default function NFTBox({ price, nftAddress, tokenId, seller, account }) {
+export default function InventoryCard({ price, nftAddress, tokenId }) {
 
     const { isWeb3Enabled } = useMoralis()
 
@@ -82,9 +82,6 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     }, [isWeb3Enabled])
 
 
-    const isOwnedByUser = seller.toLowerCase() === account.toLowerCase() || seller === undefined
-    const formattedSeller = isOwnedByUser ? "you" : shortAdrres(seller, 15)
-
     const handleSellModal = () => {
         setShowSellModal(true)
     }
@@ -95,6 +92,13 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     return (<div>
         {imageURI ? (
             <div>
+                <SellModal
+                    isVisible={showSellModal}
+                    nftAddress={nftAddress}
+                    tokenId={tokenId}
+                    price={price}
+                    hideModal={hideSellModal}
+                />
 
                 <UpdateListingModal
                     isVisible={showChangeModal}
