@@ -1,11 +1,11 @@
-import { useNotification } from '@web3uikit/core'
-import { useQuery, useLazyQuery } from '@apollo/client'
+import { useLazyQuery } from '@apollo/client'
 import { GET_BUYED_ITEMS, GET_SELLING_ITEMS } from '@/constants/subgraphQuery'
-import { useMoralis } from "react-moralis";
+import { useMoralis, useWeb3Contract } from "react-moralis"
 import { useEffect, useState } from 'react'
-import InventoryCard from '@/components/InventoryCard';
+import InventoryCard from '@/components/InventoryCard'
 import styles from '../styles/Index.module.css'
-import NFTBox from '@/components/NFTBox';
+import NFTBox from '@/components/NFTBox'
+import basicNFT from "../constants/BasicNft.json"
 
 
 
@@ -18,7 +18,7 @@ export default function Inventory() {
     const [getSellingItems, { loadingSelling, data: sellingNfts }] = useLazyQuery(GET_SELLING_ITEMS)
 
 
-
+    const { runContractFunction } = useWeb3Contract()
 
     const [output, setOutput] = useState("")
 
@@ -30,6 +30,7 @@ export default function Inventory() {
             getSellingItems({ variables: { account } })
         }
         if (isWeb3Enabled && buyedNfts && sellingNfts) {
+            generateCards()
             let itemOutput = {}
             itemOutput.buyed = buyedNfts.activeItems.map((nft) => {
                 let { price, nftAddress, tokenId } = nft
@@ -57,6 +58,35 @@ export default function Inventory() {
     }, [isWeb3Enabled, buyedNfts, sellingNfts])
 
 
+
+
+
+    async function generateCards() {
+        let itemOutput = {}
+        itemOutput.buyed = await Promise.all(buyedNfts.activeItems.map(async (nft) => {
+            let { nftAddress, tokenId } = nft
+
+            const checkOptions = {
+                abi: basicNFT.abi,
+                contractAddress: nftAddress,
+                functionName: "ownerOf",
+                params: {
+                    tokenId: tokenId,
+                },
+            }
+            const result = await runContractFunction({
+                params: checkOptions,
+                onError: (error) => console.log(error),
+                onSuccess: (tx) => console.log("success tx " + tx)
+            })
+            console.log(`Result of checking: ${result}`)
+
+
+        }))
+
+    }
+
+
     //console.log(buyedNfts)
 
     return (
@@ -64,11 +94,11 @@ export default function Inventory() {
             {output ? (
                 <div>
                     <div>
-                        <h1 className={styles.title}>NFT in your inventory</h1>
+                        <h3 className={styles.title}>NFT in your inventory</h3>
                         {output.selling ? <div className={styles.card}>{output.buyed}</div> : <div><p>You have no NFTs avalible for sale yet.</p></div>}
                     </div>
                     <div>
-                        <h1 className={styles.title}>Your listed NFT</h1>
+                        <h3 className={styles.title}>Your listed NFT</h3>
                         {output.buyed ? <div className={styles.card}>{output.selling}</div> : <div><p>Currently no NFTs are listed for sale.</p></div>}
                     </div>
                 </div>

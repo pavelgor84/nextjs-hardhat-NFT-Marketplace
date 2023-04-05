@@ -22,7 +22,7 @@ const shortAdrres = (string, len) => {
 
 export default function InventoryCard({ price, nftAddress, tokenId }) {
 
-    const { isWeb3Enabled } = useMoralis()
+    const { isWeb3Enabled, account } = useMoralis()
 
     const [imageURI, setImageURI] = useState("")
     //console.log(imageURI)
@@ -55,10 +55,24 @@ export default function InventoryCard({ price, nftAddress, tokenId }) {
 
     })
 
+    // const { runContractFunction: getTokenOwner } = useWeb3Contract({
+    //     abi: nft.abi,
+    //     contractAddress: nftAddress,
+    //     functionName: "ownerOf",
+    //     params: {
+    //         tokenId: tokenId,
+    //     },
+
+    // })
+
 
     async function updateUI() {
+        //// check if the nft ownner is still equals to user account since the user could sell it on other marketplace.
+        // const tokenOwner = await getTokenOwner()
+        // if (tokenOwner.toLowerCase() !== account.toLowerCase()) return false
+        // console.log(`the token owner is changed: ${tokenOwner.toLowerCase() !== account.toLowerCase()}`)
+        ///
         const tokenURI = await getTokenURI()
-        //console.log(`token URI: ${tokenURI}`)
 
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
