@@ -14,6 +14,7 @@ export default function SellModal({ nftAddress, tokenId, price, isVisible, hideM
     const dispatch = useNotification()
 
     async function approveAndSell(data) {
+        setStatusDisbled(true)
 
         //const price = ethers.utils.parseUnits(price, "ether").toString()
         const newPrice = ethers.utils.parseUnits(data.data[0].inputResult, "ether").toString()
@@ -64,6 +65,7 @@ export default function SellModal({ nftAddress, tokenId, price, isVisible, hideM
 
     async function handleListSuccess(tx) {
         await tx.wait(1)
+        hideModal()
         dispatch({
             type: "success",
             message: "Please refresh the page.",

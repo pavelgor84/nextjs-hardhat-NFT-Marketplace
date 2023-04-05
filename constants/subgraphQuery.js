@@ -30,4 +30,19 @@ query GetBuyedItems($account: String!){
 }
 `
 
-export { GET_ACTIVE_ITEMS, GET_BUYED_ITEMS }
+const GET_SELLING_ITEMS = gql`
+query GetSellingItems($account: String!){
+    
+    activeItems(first:50, where:{seller_contains:$account,buyer_contains:"0x00000000"}){
+        id
+        buyer
+        seller
+        nftAddress
+        tokenId
+        price
+    }
+    
+}
+`
+
+export { GET_ACTIVE_ITEMS, GET_BUYED_ITEMS, GET_SELLING_ITEMS }
