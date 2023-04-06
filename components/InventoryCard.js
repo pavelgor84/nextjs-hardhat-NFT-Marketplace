@@ -55,16 +55,6 @@ export default function InventoryCard({ price, nftAddress, tokenId }) {
 
     })
 
-    // const { runContractFunction: getTokenOwner } = useWeb3Contract({
-    //     abi: nft.abi,
-    //     contractAddress: nftAddress,
-    //     functionName: "ownerOf",
-    //     params: {
-    //         tokenId: tokenId,
-    //     },
-
-    // })
-
 
     async function updateUI() {
         //// check if the nft ownner is still equals to user account since the user could sell it on other marketplace.
@@ -77,7 +67,7 @@ export default function InventoryCard({ price, nftAddress, tokenId }) {
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             const tokenURIResponse = await (await fetch(requestURL)).json()
-            console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
+            //console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
             const imageURI = tokenURIResponse.image
             const imageURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
 

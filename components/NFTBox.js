@@ -23,7 +23,7 @@ const shortAdrres = (string, len) => {
 export default function NFTBox({ price, nftAddress, tokenId, seller, account }) {
 
     const { isWeb3Enabled } = useMoralis()
-    console.log(`web3 enabled: ${isWeb3Enabled}`)
+    //console.log(`web3 enabled: ${isWeb3Enabled}`)
 
 
     const [imageURI, setImageURI] = useState("")
@@ -65,7 +65,7 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             const tokenURIResponse = await (await fetch(requestURL)).json()
-            console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
+            //console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
             const imageURI = tokenURIResponse.image
             const imageURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
 
@@ -79,7 +79,6 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, account }) 
     useEffect(() => {
         if (isWeb3Enabled) {
             updateUI()
-            //setTimeout(updateUI, 500)
         }
     }, [isWeb3Enabled])
 
