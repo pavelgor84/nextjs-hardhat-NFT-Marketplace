@@ -28,7 +28,7 @@ export default function Header() {
 
     async function updateProceeds(address) {
 
-        console.log(address)
+        //console.log(address)
         const options = {
             abi: marketplace.abi,
             contractAddress: marketplace.address,

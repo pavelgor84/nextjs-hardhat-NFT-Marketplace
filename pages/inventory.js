@@ -25,6 +25,7 @@ export default function Inventory() {
 
     useEffect(() => {
         if (isWeb3Enabled && !buyedNfts) {
+            console.log("")
             getBuyedItems({ variables: { account } })
         }
         if (isWeb3Enabled && !sellingNfts) {
@@ -65,11 +66,11 @@ export default function Inventory() {
         let itemOutput = {}
         const filteredBuyed = await Promise.all(buyedNfts.activeItems.filter(filterTrueOwner)) //apply filter and remove nfts where current owner differs from actual NFT smartcontract token owner
         itemOutput.buyed = filteredBuyed.map((nft) => {
-            let { price, nftAddress, tokenId } = nft
+            let { price, nftAddress, tokenId, buyer } = nft
             let key = `${nftAddress}${tokenId}`
             return (
                 <div key={key}>
-                    <InventoryCard price={price} nftAddress={nftAddress} tokenId={tokenId} />
+                    <NFTBox price={price} nftAddress={nftAddress} tokenId={tokenId} account={account} buyer={buyer} />
                 </div>
             )
         })

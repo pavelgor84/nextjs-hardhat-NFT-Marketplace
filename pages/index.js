@@ -29,7 +29,7 @@ export default function Home() {
 
   useEffect(() => {
     if (isConnected && !listedNfts) {
-      //enableWeb3()
+      console.log("useEffect in index")
       getItems()
     }
     if (isConnected && listedNfts) {

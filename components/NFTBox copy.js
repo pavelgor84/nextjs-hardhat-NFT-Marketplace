@@ -8,7 +8,6 @@ import styles from "../styles/NFTBox.module.css"
 import UpdateListingModal from "./UpdateListingModal";
 import BuyListingModal from "./BuyListingModal";
 import DelistModal from "./DelistModal";
-import SellModal from "./SellModal";
 
 
 const shortAdrres = (string, len) => {
@@ -21,25 +20,22 @@ const shortAdrres = (string, len) => {
     return (string.substring(0, backChars) + sepatator + string.substring(string.length - endChars))
 }
 
-export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, account }) {
+export default function NFTBox({ price, nftAddress, tokenId, seller, account }) {
 
     const { isWeb3Enabled } = useMoralis()
     //console.log(`web3 enabled: ${isWeb3Enabled}`)
 
 
     const [imageURI, setImageURI] = useState("")
-
+    //console.log(imageURI)
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
-    console.log(tokenName)
 
-    /// Modal states
+    /// Handle modals
     const [showChangeModal, setShowChangeModal] = useState(false)
     const [showBuyModal, setShowBuyModal] = useState(false)
     const [showDelistModal, setShowDelistModal] = useState(false)
-    const [showSellModal, setShowSellModal] = useState(false)
 
-    // Modal handlers
     const hideChangeModal = () => {
         setShowChangeModal(false)
     }
@@ -48,9 +44,6 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
     }
     const hideDelistModal = () => {
         setShowDelistModal(false)
-    }
-    const hideSellModal = () => {
-        setShowSellModal(false)
     }
     ///
 
@@ -67,7 +60,7 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
 
     async function updateUI() {
         const tokenURI = await getTokenURI()
-        console.log(`token URI: ${tokenURI}`)
+        //console.log(`token URI: ${tokenURI}`)
 
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
@@ -90,8 +83,8 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
     }, [isWeb3Enabled])
 
 
-    const isOwnedByUser = seller?.toLowerCase() === account.toLowerCase() || seller === undefined
-    const formattedSeller = isOwnedByUser ? "You" : shortAdrres(seller, 15)
+    const isOwnedByUser = seller.toLowerCase() === account.toLowerCase() || seller === undefined
+    const formattedSeller = isOwnedByUser ? "you" : shortAdrres(seller, 15)
 
     const handleChangeBuyClick = () => {
         isOwnedByUser ? setShowChangeModal(true) : setShowBuyModal(true)
@@ -99,20 +92,10 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
     const handleDelistClick = () => {
         setShowDelistModal(true)
     }
-    const handleSellModal = () => {
-        setShowSellModal(true)
-    }
 
     return (<div>
         {imageURI ? (
             <div>
-                <SellModal
-                    isVisible={showSellModal}
-                    nftAddress={nftAddress}
-                    tokenId={tokenId}
-                    price={price}
-                    hideModal={hideSellModal}
-                />
                 <BuyListingModal
                     isVisible={showBuyModal}
                     nftAddress={nftAddress}
@@ -139,15 +122,14 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
                         <div className={styles.info_block}>
                             <div className={styles.priceBlock}>
                                 <div>#{tokenId}</div>
-                                {(isOwnedByUser && seller) ? <div><button onClick={handleDelistClick}>DELIST</button></div> : <div></div>}
+                                {isOwnedByUser ? <div><button onClick={handleDelistClick}>DELIST</button></div> : <div></div>}
                             </div>
                             <div className={styles.owner}> Owned by {formattedSeller}</div>
                             <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
                             <div className={styles.priceBlock}>
                                 <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
-                                {isOwnedByUser && seller && <button className={styles.changePriceButton} onClick={handleChangeBuyClick}>CHANGE PRICE</button>}
-                                {!isOwnedByUser && seller && <button className={styles.buyButton} onClick={handleChangeBuyClick}>BUY NOW</button>}
-                                {isOwnedByUser && buyer && <button className={styles.changePriceButton} onClick={handleSellModal}>SELL</button>}
+                                {isOwnedByUser ? <button className={styles.changePriceButton} onClick={handleChangeBuyClick}>CHANGE PRICE</button>
+                                    : <button className={styles.buyButton} onClick={handleChangeBuyClick}>BUY NOW</button>}
                             </div>
                         </div>
                     </div>
