@@ -139,14 +139,18 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
                         <div className={styles.info_block}>
                             <div className={styles.priceBlock}>
                                 <div>#{tokenId}</div>
+                                {/* // NFT is owned by current user and has a seller in event, means that is being listed */}
                                 {(isOwnedByUser && seller) ? <div><button onClick={handleDelistClick}>DELIST</button></div> : <div></div>}
                             </div>
                             <div className={styles.owner}> Owned by {formattedSeller}</div>
                             <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
                             <div className={styles.priceBlock}>
                                 <div className={styles.price}> {ethers.utils.formatUnits(price, "ether")} ETH</div>
+                                {/* // NFT is owned by current user and has a seller in event, means that is being listed. The user can change the price */}
                                 {isOwnedByUser && seller && <button className={styles.changePriceButton} onClick={handleChangeBuyClick}>CHANGE PRICE</button>}
+                                {/* // NFT isn't owned by user and has a seller, means that it's being sold now by someone else */}
                                 {!isOwnedByUser && seller && <button className={styles.buyButton} onClick={handleChangeBuyClick}>BUY NOW</button>}
+                                {/* // NFT is owned by user and has a buyer, means that it isn't being sold now and the user has just its ownership in NFT smartcontract */}
                                 {isOwnedByUser && buyer && <button className={styles.changePriceButton} onClick={handleSellModal}>SELL</button>}
                             </div>
                         </div>
