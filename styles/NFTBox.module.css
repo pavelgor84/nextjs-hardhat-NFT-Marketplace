@@ -43,3 +43,13 @@
     cursor: pointer;
     background-color: rgb(144, 159, 226);
 }
+
+.tooltip {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    width: 25px;
+    height: 25px;
+    color: blueviolet;
+}

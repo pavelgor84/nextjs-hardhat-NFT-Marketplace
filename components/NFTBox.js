@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Children } from "react";
 import { useMoralis, useWeb3Contract } from "react-moralis";
 import nft from "../constants/BasicNft.json"
 import Image from "next/image";
-import { Card } from "@web3uikit/core"
+import { Card, Tooltip } from "@web3uikit/core"
+import { Info } from '@web3uikit/icons'
 import { ethers } from "ethers"
 import styles from "../styles/NFTBox.module.css"
 import UpdateListingModal from "./UpdateListingModal";
 import BuyListingModal from "./BuyListingModal";
 import DelistModal from "./DelistModal";
 import SellModal from "./SellModal";
+import Metadata from "./Metadata";
 
 
 const shortAdrres = (string, len) => {
@@ -67,18 +69,18 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
 
     async function updateUI() {
         const tokenURI = await getTokenURI()
-        console.log(`token URI: ${tokenURI}`)
+        //console.log(`token URI: ${tokenURI}`)
 
         if (tokenURI) {
             const requestURL = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/")
             const tokenURIResponse = await (await fetch(requestURL)).json()
-            //console.log(`tokenURI: ${JSON.stringify(tokenURIResponse)}`)
+            console.log(`tokenURI: ${JSON.stringify(tokenURIResponse, null, 2)}`)
             const imageURI = tokenURIResponse.image
             const imageURL = imageURI.replace("ipfs://", "https://ipfs.io/ipfs/")
 
             setImageURI(imageURL)
             setTokenName(tokenURIResponse.name)
-            setTokenDescription(tokenURIResponse.description)
+            setTokenDescription(tokenURIResponse)
         }
     }
     //updateUI() // can use useEffect
@@ -134,13 +136,23 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
                     tokenId={tokenId}
                     hideModal={hideDelistModal}
                 />
-                <Card title={tokenName} description={tokenDescription} cursorType="default">
+
+                <Card title={tokenName ? tokenName : "No name"} description={tokenDescription.description ? tokenDescription.description : "No description"} cursorType="default">
                     <div className={styles.info_block_padding}>
                         <div className={styles.info_block}>
                             <div className={styles.priceBlock}>
                                 <div>#{tokenId}</div>
                                 {/* // NFT is owned by current user and has a seller in event, means that is being listed */}
                                 {(isOwnedByUser && seller) ? <div><button onClick={handleDelistClick}>DELIST</button></div> : <div></div>}
+
+                                <div className={styles.tooltip} >
+                                    <Tooltip
+                                        content={<Metadata data={tokenDescription} />}
+                                        position="right"
+                                    >
+                                        <Info color="#blue" fontSize='25px' />
+                                    </Tooltip>
+                                </div>
                             </div>
                             <div className={styles.owner}> Owned by {formattedSeller}</div>
                             <Image loader={() => imageURI} alt="Nft image" src={imageURI} height="200" width="200" />
@@ -155,9 +167,10 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
                             </div>
                         </div>
                     </div>
-                </Card> </div>) :
+                </Card> </div >) :
             (
                 <div>Loading...</div>
-            )}
-    </div>)
+            )
+        }
+    </div >)
 }

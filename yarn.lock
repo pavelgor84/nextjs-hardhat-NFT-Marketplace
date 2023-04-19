@@ -2615,10 +2615,27 @@
     "@web3uikit/styles" "*"
     react-router-dom "^6.3.0"
 
+"@web3uikit/core@^0.4.3":
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/@web3uikit/core/-/core-0.4.3.tgz#c6130a42b3169d9487c66e945b3f34117b466242"
+  integrity sha512-3mqihP8FAP/PTNE9U3lt1kDYAq0N5UU17rR3/a/l/6St6+hH9Jdd8D2n945XSlkM9NDSc4Tzp2CD+VvzTj/kzw==
+  dependencies:
+    "@web3uikit/config" "*"
+    "@web3uikit/icons" "*"
+    "@web3uikit/styles" "*"
+    react-router-dom "^6.3.0"
+
 "@web3uikit/icons@*":
   version "0.2.41"
   resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-0.2.41.tgz#ebed62769d492870e7ae9c752df351f6b7034a15"
   integrity sha512-/u/6MNZa6RRzUGt/Eod7HXwma5CIAx3X4tcR4tvKBcptPhKEkTVcaVOg5gokILpfnpslTUMlF87WCK78n5rcFA==
+  dependencies:
+    "@web3uikit/config" "*"
+
+"@web3uikit/icons@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@web3uikit/icons/-/icons-0.4.1.tgz#ce86a6200d6bb200c59494fe76cca3e6701f758a"
+  integrity sha512-ZvOgmTx8dB+ft75Gdb+2fkSAZ0yfyXAsot767i0T4NJ2gEiuFTJM5sXLyRzCMR82hhawEsGtktAGrsojFEs8mg==
   dependencies:
     "@web3uikit/config" "*"
 
@@ -2629,10 +2646,10 @@
   dependencies:
     "@web3uikit/config" "*"
 
-"@web3uikit/web3@^0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@web3uikit/web3/-/web3-0.2.2.tgz#3dbecc4b2954470a733ab50d972e065146040db9"
-  integrity sha512-OwTZJTnaWMuKXsjDpYtXSV3w12Rwm8sv4GB5ptjNoTZZ2xXx2kJrLKbRrgBgm2duhLocD2u2mdXAAmcbyyaxkg==
+"@web3uikit/web3@^0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@web3uikit/web3/-/web3-0.3.2.tgz#0c89dc6535e14796ead3f00a4c5f2f3dfb410386"
+  integrity sha512-ouu0muVJuT12lHBzpgWAoZnLJ8ZQ5H1zfQ4JxXwxWqQFArO+lY/DGY1blGL67dtM8eTdLE32wzFgjYSg0vytEw==
   dependencies:
     "@walletconnect/web3-provider" "^1.7.8"
     "@web3auth/web3auth" "^1.1.0"
