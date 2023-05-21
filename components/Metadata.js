@@ -4,34 +4,27 @@ import styles from "../styles/Metadata.module.css"
 
 export default function Metadata({ data }) {
 
-    function metaprops(data) {
-        let out = ""
-        if (data.attributes) {
-            for (obj in data.attributes) {
-                out += ""
-            }
-        }
+    let table = ""
+    if (data.attributes) {
+        table = data.attributes.map((item) => {
+            return (
+                <tr key={item.trait_type + "1"}>
+                    <td>{item.trait_type}</td>
+                    <td>{item.value}</td>
+                </tr>
+            )
+        })
+
     }
 
 
     return (
         <div className={styles.body}>
-            {JSON.stringify(data, null, 2)}
-            <table>
-                <thead>
-                    <tr>
-                        <th>
-                            Attribute
-                        </th>
-                        <th>
-                            Value
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
 
-                    </tr>
+            <table>
+
+                <tbody>
+                    {table}
                 </tbody>
             </table>
 

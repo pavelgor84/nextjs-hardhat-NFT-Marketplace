@@ -33,7 +33,7 @@ export default function NFTBox({ price, nftAddress, tokenId, seller, buyer, acco
 
     const [tokenName, setTokenName] = useState("")
     const [tokenDescription, setTokenDescription] = useState("")
-    console.log(tokenName)
+    //console.log(tokenName)
 
     /// Modal states
     const [showChangeModal, setShowChangeModal] = useState(false)
